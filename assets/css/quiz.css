@@ -1,0 +1,223 @@
+/* «Своя игра»: рассчитана на проектор, поэтому размеры идут от окна. */
+
+body { overflow: hidden; }
+
+.screen, .overlay { font-size: max(13px, min(1.3vw, 2.3vh)); }
+
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; }
+.screen[hidden], .overlay[hidden] { display: none; }
+
+h1 { font-size: 5.5em; font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; }
+h2 { font-size: 1.4em; font-weight: 800; }
+.eyebrow { display: flex; align-items: center; gap: 0.7em; font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+.eyebrow::before { content: ""; width: 0.65em; height: 0.65em; background: currentColor; flex: none; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 1em; }
+.btn { font-size: 1.15em; }
+kbd { font-size: 0.7em; opacity: 0.75; }
+
+/* Настройка */
+.setup { justify-content: center; gap: 1.8em; padding: 3em 6em; overflow: auto; }
+.setup__lead { font-size: 1.6em; max-width: 32em; }
+.setup__grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3em; max-width: 60em; }
+.setup__block { display: flex; flex-direction: column; gap: 1em; }
+.setup__hint { font-size: 1.1em; }
+.seg { display: inline-flex; border: var(--frame) solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm); width: fit-content; }
+.seg button { padding: 0.5em 1.4em; border: 0; background: transparent; font-size: 1.5em; font-weight: 800; cursor: pointer; }
+.seg button + button { border-left: 2px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.seg button:focus-visible { outline: 3px solid var(--mark); outline-offset: -3px; }
+.check { display: flex; align-items: center; gap: 0.6em; font-size: 1.15em; cursor: pointer; }
+.check input { width: 1.2em; height: 1.2em; accent-color: var(--blue); }
+.names { display: flex; flex-direction: column; gap: 0.6em; }
+.names label { display: flex; align-items: center; gap: 0.7em; }
+.names i { width: 0.9em; height: 0.9em; background: var(--team); flex: none; }
+.names input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5em 0.9em;
+  border: var(--frame) solid var(--line);
+  background: var(--surface);
+  font-size: 1.3em;
+  font-weight: 700;
+}
+.names input:focus { outline: none; border-color: var(--team); }
+
+/* Счёт */
+.board-screen { padding: 1.2em 1.6em 1em; gap: 1em; }
+.scores { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 1em; }
+.team {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 0.8em;
+  padding: 0.7em 1.1em;
+  border: var(--frame) solid var(--line);
+  border-top: 0.45em solid var(--team);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.team__name { font-size: 1.3em; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.team__score { grid-row: 2; font-size: 2.8em; font-weight: 900; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.team__adj { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-direction: column; gap: 0.3em; }
+.team__adj button { width: 1.9em; height: 1.9em; border: 2px solid var(--line); background: transparent; cursor: pointer; font-weight: 800; opacity: 0.5; }
+.team__adj button:hover { opacity: 1; border-color: var(--text); }
+.team.is-turn { box-shadow: 6px 6px 0 var(--team); }
+.team.is-turn::after {
+  content: "выбирает";
+  position: absolute;
+  top: -1.55em;
+  right: 0.8em;
+  padding: 0.1em 0.6em;
+  background: var(--team);
+  color: var(--on-fill);
+  font-family: var(--mono);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.team.bump .team__score { animation: bump 0.45s ease-out; }
+@keyframes bump { 30% { transform: scale(1.25); } }
+
+/* Табло */
+.board { flex: 1; min-height: 0; display: grid; grid-template-rows: auto repeat(4, 1fr); gap: 0.7em; margin-top: 0.4em; }
+.board__head {
+  display: grid;
+  place-items: center;
+  padding: 0.6em 0.4em;
+  font-size: 1.35em;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.cell {
+  border: var(--frame) solid var(--line);
+  background: var(--surface);
+  font-size: 3.4em;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.08s ease;
+}
+.cell:hover:not(:disabled) { transform: translate(-2px, -2px); background: var(--mark); color: var(--on-fill); }
+.cell:focus-visible { outline: 3px solid var(--mark); outline-offset: 2px; }
+.cell:disabled { color: var(--rule); background: transparent; border: 2px dashed var(--rule); box-shadow: none; cursor: default; }
+.board-foot { display: flex; align-items: center; justify-content: space-between; gap: 1em; flex-wrap: wrap; }
+.board-foot__btns { display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
+.board-foot .btn { font-size: 0.95em; padding: 0.5em 1em; }
+.board-foot .icon-btn { font-size: 0.9em; }
+#finalBtn.is-ready { background: var(--mark); color: var(--on-fill); }
+
+/* Вопрос */
+.overlay { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; gap: 1.2em; padding: 1.5em 2.5em 1.8em; background-color: var(--bg); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 32px 32px; }
+.q-head { display: flex; align-items: center; gap: 1.2em; }
+.q-head .tag { font-size: 1em; color: var(--muted); }
+.q-value { font-size: 1.8em; font-weight: 700; color: var(--accent); }
+.timer { position: relative; flex: 1; height: 1.9em; background: var(--surface); border: var(--frame) solid var(--line); overflow: hidden; cursor: pointer; }
+.timer i { position: absolute; inset: 0; transform-origin: left; background: var(--blue); transition: transform 1s linear; }
+.timer b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 1.05em; color: #fff; mix-blend-mode: difference; }
+.timer.is-low i { background: var(--mark); }
+.timer.is-out i { background: var(--noise); transform: scaleX(1) !important; transition: none; }
+.timer.is-paused { opacity: 0.6; }
+
+.q-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr; align-items: center; gap: 2.5em; }
+.q-body.has-img { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+.q-img { height: 100%; min-height: 0; display: grid; place-items: center; }
+.q-img img { max-height: 100%; max-width: 100%; object-fit: contain; }
+.q-text { display: flex; flex-direction: column; gap: 1.5em; }
+.q-body:not(.has-img) .q-text { align-items: center; text-align: center; padding: 0 4em; }
+.q-question { font-size: 3em; font-weight: 800; line-height: 1.14; letter-spacing: -0.015em; text-wrap: balance; }
+.q-body.has-img .q-question { font-size: 2.4em; }
+.q-options { display: flex; flex-direction: column; gap: 0.5em; width: 100%; max-width: 38em; text-align: left; }
+.q-options li { display: grid; grid-template-columns: 1.8em 1fr; align-items: center; gap: 0.7em; padding: 0.55em 0.9em; border: var(--frame) solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm); font-size: 1.7em; font-weight: 700; line-height: 1.2; }
+.q-options b { display: grid; place-items: center; width: 1.8em; height: 1.8em; border: 2px solid var(--line); background: var(--surface-2); font-family: var(--mono); font-size: 0.8em; }
+.q-body.has-img .q-options li { font-size: 1.4em; }
+.is-revealed .q-options li { font-size: 1.25em; color: var(--muted); box-shadow: none; }
+.is-revealed .q-options li.is-correct { background: var(--signal); color: var(--on-fill); box-shadow: var(--shadow-sm); }
+.is-revealed .q-options li.is-correct b { background: #fff; border-color: #020835; color: #020835; }
+/* когда есть варианты, ответ уже подсвечен в списке */
+.q-body.is-revealed:not(.no-options) .q-answer__main { display: none; }
+.q-answer { display: flex; flex-direction: column; gap: 0.5em; padding-top: 1.2em; border-top: var(--frame) solid var(--line); }
+.q-answer__main { font-size: 3.2em; font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; color: var(--signal-ink); text-wrap: balance; }
+.q-body.has-img .q-answer__main { font-size: 2.6em; }
+.q-answer__note { font-size: 1.5em; line-height: 1.35; color: var(--muted); max-width: 34em; }
+.is-revealed .q-question { font-size: 1.7em; font-weight: 600; color: var(--muted); }
+
+.q-foot { display: flex; align-items: center; justify-content: center; min-height: 3.6em; }
+.award { display: flex; align-items: center; gap: 1em; flex-wrap: wrap; justify-content: center; }
+.award[hidden] { display: none; }
+.award__teams { display: flex; gap: 0.7em; flex-wrap: wrap; justify-content: center; }
+.award__team { display: inline-flex; border: var(--frame) solid var(--line); background: var(--surface); box-shadow: 4px 4px 0 var(--team); }
+.award__team button { padding: 0.55em 1.1em; border: 0; background: transparent; font-size: 1.15em; font-weight: 800; cursor: pointer; }
+.award__team button:hover:not(:disabled) { background: var(--team); color: var(--on-fill); }
+.award__team button:disabled { opacity: 0.35; cursor: default; }
+.award__team .minus { border-left: 2px solid var(--line); color: var(--noise-ink); }
+.award__team kbd { margin-right: 0.5em; }
+
+/* Финал */
+.final-body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.6em; text-align: center; padding: 0 4em; overflow: auto; }
+.final-step { font-size: 1.1em; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.bets { display: flex; gap: 1em; flex-wrap: wrap; justify-content: center; }
+.bet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  min-width: 11em;
+  padding: 0.9em 1.1em;
+  border: var(--frame) solid var(--line);
+  border-top: 0.45em solid var(--team);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+}
+.bet__name { font-size: 1.2em; font-weight: 800; }
+.bet__score { font-family: var(--mono); font-size: 0.9em; color: var(--muted); }
+.bet input { width: 100%; padding: 0.35em 0.6em; border: var(--frame) solid var(--line); background: var(--bg); font-size: 1.6em; font-weight: 800; font-variant-numeric: tabular-nums; }
+.bet input:focus { outline: none; border-color: var(--team); }
+.bet__ok { padding: 0.45em 0.8em; border: var(--frame) solid var(--line); background: transparent; font-weight: 800; cursor: pointer; }
+.bet__ok[aria-pressed="true"] { background: var(--signal); color: var(--on-fill); }
+
+/* Итоги */
+.results { align-items: center; justify-content: center; text-align: center; gap: 1.8em; }
+.results h1 { font-size: 4.6em; max-width: 14em; text-wrap: balance; }
+.confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.podium { display: flex; flex-direction: column; gap: 0.6em; width: min(34em, 90%); }
+.podium li {
+  display: grid;
+  grid-template-columns: 2em 1fr auto;
+  align-items: center;
+  gap: 1em;
+  padding: 0.7em 1.2em;
+  border: var(--frame) solid var(--line);
+  border-left: 0.5em solid var(--team);
+  background: var(--surface);
+  font-size: 1.5em;
+  font-weight: 800;
+  text-align: left;
+}
+.podium li.is-winner { box-shadow: 6px 6px 0 var(--mark); font-size: 1.9em; }
+.podium .place { font-family: var(--mono); color: var(--muted); }
+.podium .pts { font-variant-numeric: tabular-nums; color: var(--signal-ink); }
+.results .row { justify-content: center; position: relative; }
+
+@media (max-width: 800px) {
+  body { overflow: auto; }
+  .screen { position: static; min-height: 100vh; }
+  .setup { padding: 2em 1.2em; }
+  h1 { font-size: 3.4em; }
+  .setup__grid { grid-template-columns: 1fr; gap: 1.5em; }
+  .scores { grid-auto-flow: row; grid-template-columns: 1fr 1fr; }
+  .team.is-turn::after { top: 0.3em; }
+  .board__head { font-size: 0.8em; padding: 0.3em 0.1em; word-break: break-word; }
+  .cell { font-size: 1.5em; min-height: 3em; }
+  .overlay { padding: 1em; overflow: auto; }
+  .q-body.has-img { grid-template-columns: 1fr; }
+  .q-img img { max-height: 38vh; }
+  .q-question, .q-body.has-img .q-question { font-size: 1.7em; }
+  .q-answer__main, .q-body.has-img .q-answer__main { font-size: 2em; }
+  .q-body:not(.has-img) .q-text, .final-body { padding: 0; }
+}

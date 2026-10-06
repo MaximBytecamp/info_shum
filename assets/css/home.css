@@ -1,0 +1,32 @@
+/* Главная: три входа — презентация и две игры. */
+
+.home { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 2.5rem; padding: 3rem clamp(1rem, 5vw, 5rem); max-width: 80rem; margin: 0 auto; }
+.home__head { display: flex; flex-direction: column; gap: 1rem; }
+.eyebrow { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+h1 { font-size: clamp(2.6rem, 8vw, 6.5rem); font-weight: 900; line-height: 0.92; letter-spacing: -0.035em; text-transform: uppercase; hyphens: manual; }
+.lead { font-size: clamp(1.1rem, 2vw, 1.5rem); max-width: 36em; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 15rem;
+  padding: 1.4rem 1.5rem;
+  border: var(--frame) solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.tile:hover { transform: translateY(-0.25rem); border-color: var(--text); }
+.tile:focus-visible { outline: 3px solid var(--ai); outline-offset: 3px; }
+.tile__num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.tile h2 { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+.tile p { font-size: 1.05rem; line-height: 1.4; color: var(--muted); }
+.tile__go { margin-top: auto; font-weight: 800; color: var(--signal-ink); }
+.tile--signal { background: var(--signal); border-color: var(--signal); color: var(--on-fill); }
+.tile--signal p, .tile--signal .tile__num, .tile--signal .tile__go { color: var(--on-fill); }
+.tile--signal p, .tile--signal .tile__num { opacity: 0.75; }
+
+.home__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: 0.8rem; }

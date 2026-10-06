@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Информационный шум — презентация</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/slides.css">
+  <script src="assets/js/theme.js"></script>
+</head>
+<body>
+<main class="deck" id="deck">
+
+  <!-- 1. Титул -->
+  <section class="slide slide--inverse s-title">
+    <canvas class="static" id="static" aria-hidden="true"></canvas>
+    <div class="s-title__body">
+      <p class="eyebrow mono">сигнал / шум</p>
+      <h1>Информа&shy;ционный <span class="u">шум</span></h1>
+      <p class="lead">Как находить нужное в потоке сообщений</p>
+      <p class="hint mono"><kbd>→</kbd> дальше · <kbd>F</kbd> весь экран · <kbd>N</kbd> заметки</p>
+    </div>
+    <aside class="notes">Занятие на 45 минут: 20 минут слайды, 20 минут игра, 5 минут итог. На слайдах с кнопками сначала спросите группу, потом нажимайте.</aside>
+  </section>
+
+  <!-- 2. Опыт -->
+  <section class="slide slide--inverse s-center">
+    <p class="eyebrow mono">опыт на 10 секунд</p>
+    <h2>Посчитайте в уме: <span class="signal">17 × 6</span></h2>
+    <div class="row">
+      <button class="btn btn--noise" id="toastStart">Включить уведомления</button>
+      <span class="mono muted" id="toastTimer"></span>
+    </div>
+    <p class="after" id="toastAfter" hidden>Ответ: <b class="signal">102</b>. Срочных уведомлений среди них не было, но считать они мешали.</p>
+    <div class="toast-layer" id="toastLayer" aria-hidden="true"></div>
+    <aside class="notes">Попросите считать молча и нажмите кнопку: десять секунд по экрану идут уведомления. Потом спросите, кто успел посчитать. Отсюда переходим к теме: нужная задача на экране была одна, а отвлекало всё остальное.</aside>
+  </section>
+
+  <!-- 3. Экранное время -->
+  <section class="slide s-split s-split--wide">
+    <div>
+      <p class="big-num">6+</p>
+      <h2>часов в день подросток проводит за экраном</h2>
+      <p class="ask">Откройте в телефоне «Экранное время». Сколько у вас?</p>
+      <p class="credit">Mediascope, июнь 2026 · Россия, 12–17 лет</p>
+    </div>
+    <figure class="meme meme--h">
+      <img src="assets/img/floppa.jpg" alt="Каракал Шлёпа с открытой пастью">
+      <figcaption class="meme__top">Экранное время за неделю</figcaption>
+      <figcaption class="meme__bottom">Я:</figcaption>
+    </figure>
+    <aside class="notes">Данные Mediascope представили на ПМЭФ в июне 2026 года: подростки 12–17 лет проводят за смартфоном и компьютером больше шести часов в день, это 80% всего их медиапотребления. Дайте минуту, чтобы каждый посмотрел свою цифру в настройках телефона, и сравните вслух несколько ответов.</aside>
+  </section>
+
+  <!-- 4. Шеннон -->
+  <section class="slide s-split s-split--wide">
+    <div>
+      <p class="eyebrow mono">клод шеннон, 1948</p>
+      <h2><span class="signal">Сигнал</span> — что хотели передать.<br><span class="noise">Шум</span> — что примешалось по дороге.</h2>
+      <p class="ask">Подвигайте ползунок</p>
+    </div>
+    <div class="snr">
+      <div class="snr__box" id="snrBox">
+        <p class="snr__signal">Завтра зачёт по&nbsp;математике, ауд.&nbsp;204</p>
+      </div>
+      <label class="snr__ctl">
+        <span class="mono">шум</span>
+        <input type="range" id="snrRange" min="0" max="36" value="0" aria-label="Уровень шума">
+        <span class="mono" id="snrVal">0</span>
+      </label>
+    </div>
+    <aside class="notes">Слово «шум» пришло из теории связи: Клод Шеннон ввёл его в статье «Математическая теория связи» в 1948 году. На ползунке видно, как это работает: сообщение про зачёт остаётся на месте, но с каждым новым посторонним сообщением прочитать его труднее.</aside>
+  </section>
+
+  <!-- 5. Определение -->
+  <section class="slide">
+    <p class="eyebrow mono">определение</p>
+    <h2 class="def">Информационный шум — сообщения, которые занимают внимание и не помогают в&nbsp;том, чем вы сейчас заняты.</h2>
+    <table class="cmp">
+      <thead><tr><th></th><th class="cmp__signal">Сигнал</th><th class="cmp__noise">Шум</th></tr></thead>
+      <tbody>
+        <tr><th>Задача</th><td>относится к ней</td><td>не относится</td></tr>
+        <tr><th>Источник</th><td>известен</td><td>неизвестен</td></tr>
+        <tr><th>Проверка</th><td>можно проверить</td><td>проверить нельзя, давит на эмоции</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><b>Пример.</b> Мем с котом на перерыве — сигнал: вы хотели отдохнуть. Тот же мем за час до зачёта — шум.</p>
+    <aside class="notes">Главное на этом слайде: шумом сообщение делает ваша задача. Полезная и правдивая новость тоже окажется шумом, если пришла, когда вы заняты другим. Попросите группу привести пример сообщения, которое одному нужно, а другому мешает.</aside>
+  </section>
+
+  <!-- 6. Виды -->
+  <section class="slide slide--inverse">
+    <p class="eyebrow mono">восемь видов шума</p>
+    <h2>Что из этого вы видели сегодня до первой пары?</h2>
+    <ol class="kinds">
+      <li><b>Кликбейт</b><span>«Вы не поверите…»</span></li>
+      <li><b>Спам и реклама</b><span>«Только сегодня −90%»</span></li>
+      <li><b>Слухи и фейки</b><span>«Знакомый сказал, что…»</span></li>
+      <li><b>Дубли</b><span>Одна новость в 12 каналах</span></li>
+      <li><b>Бесконечная лента</b><span>«Ещё одно видео — и спать»</span></li>
+      <li class="is-ai"><b>Нейрослоп</b><span>ИИ-контент ради просмотров</span></li>
+      <li class="is-ai"><b>Боты</b><span>Комментарии без людей</span></li>
+      <li><b>Уведомления</b><span>«Вас давно не было!»</span></li>
+    </ol>
+    <aside class="notes">Быстрый опрос: называйте вид шума, студенты поднимают руки. Фиолетовым отмечены два вида, которых стало намного больше с появлением нейросетей. О них вторая половина занятия.</aside>
+  </section>
+
+  <!-- 7. Экономика внимания -->
+  <section class="slide s-split">
+    <div>
+      <p class="eyebrow mono">почему шума так много</p>
+      <h2>Сервисы зарабатывают на нашем внимании</h2>
+      <blockquote class="quote">«Богатство информации порождает бедность внимания».<cite>Герберт Саймон, 1971</cite></blockquote>
+    </div>
+    <figure class="labeled">
+      <img src="assets/img/chaplin.jpg" alt="Кадр из фильма Чарли Чаплина: герой оглядывается на прохожую">
+      <span class="label" style="left:2%;top:42%">подготовка к зачёту</span>
+      <span class="label label--signal" style="left:41%;top:9%">я</span>
+      <span class="label label--noise" style="left:52%;top:78%">ещё одно видео</span>
+      <figcaption class="credit">Чарли Чаплин, «День получки», 1922</figcaption>
+    </figure>
+    <aside class="notes">Бесплатный сервис получает деньги от рекламы, поэтому ему выгодно, чтобы мы листали дольше. Отсюда лента без конца: бесконечную прокрутку придумал дизайнер Аза Раскин в 2006 году и позже говорил, что жалеет об этом. Кадру из фильма Чаплина сто лет. Отвлекались и тогда, но отвлекающее ещё никто не подбирал под конкретного человека.</aside>
+  </section>
+
+  <!-- 8. Три числа -->
+  <section class="slide slide--inverse">
+    <p class="eyebrow mono">сначала угадайте, потом откройте</p>
+    <h2>Угадайте три числа</h2>
+    <div class="flips">
+      <button class="flip" type="button">
+        <span class="flip__q">Какая доля российских подростков каждый месяц пользуется нейросетями?</span>
+        <span class="flip__a"><b>77%</b>Mediascope, 2026. Каждый день — 30%</span>
+      </button>
+      <button class="flip" type="button">
+        <span class="flip__q">Сколько секунд мы смотрим на один экран, прежде чем переключиться?</span>
+        <span class="flip__a"><b>47</b>Глория Марк, 2023. В 2004-м было 150</span>
+      </button>
+      <button class="flip" type="button">
+        <span class="flip__q">Сколько уведомлений в день приходит на телефон подростка?</span>
+        <span class="flip__a"><b>237</b>Common Sense Media, 2023</span>
+      </button>
+    </div>
+    <aside class="notes">Группа называет варианты вслух, потом открываем карточку. 77% — данные Mediascope о подростках 12–17 лет, июнь 2026 года. 47 секунд — из книги Глории Марк «Attention Span»; по её же данным, после отвлечения на возврат к задаче уходит около 23 минут. 237 уведомлений — медиана в исследовании Common Sense Media: у половины участников их было больше, и около четверти приходило во время занятий.</aside>
+  </section>
+
+  <!-- 9. Brain rot -->
+  <section class="slide s-split s-split--media-right">
+    <div>
+      <p class="eyebrow mono">слово 2024 года · Оксфорд</p>
+      <h2>Brain rot</h2>
+      <p class="lead">Буквально «гниение мозга». Так называют состояние после нескольких часов простого однообразного контента.</p>
+      <p class="ask">Вопрос группе: что из такой ленты вы помните на следующий день?</p>
+    </div>
+    <div class="duo">
+      <figure class="plain-fig"><img src="assets/img/tralalero.jpg" alt="Сгенерированная акула в кроссовках на пляже"><figcaption class="credit">Tralalero Tralala</figcaption></figure>
+      <figure class="plain-fig"><img src="assets/img/ballerina.jpg" alt="Сгенерированная балерина с чашкой капучино вместо головы"><figcaption class="credit">Ballerina Cappuccina</figcaption></figure>
+    </div>
+    <aside class="notes">Выражение старше интернета: его использовал Генри Торо в 1854 году. В 2025-м брейнротом стали называть и сам контент. «Итальянский брейнрот» — персонажи, которых от начала до конца рисует и озвучивает нейросеть. Спросите, каких ещё персонажей знает группа.</aside>
+  </section>
+
+  <!-- 10. Rage bait -->
+  <section class="slide s-split">
+    <figure class="plain-fig plain-fig--paper">
+      <img src="assets/img/xkcd386.png" alt="Комикс xkcd: человек сидит за компьютером ночью">
+    </figure>
+    <div>
+      <p class="eyebrow mono">слово 2025 года · Оксфорд</p>
+      <h2>Rage bait</h2>
+      <p class="lead">Контент, который специально сделан так, чтобы разозлить. Злой комментарий лента тоже считает за интерес.</p>
+      <p class="dialog">— Ты идёшь спать?<br>— Не могу. <b class="noise">В интернете кто-то неправ.</b></p>
+      <p class="credit">xkcd.com/386 · Рэндел Манро · CC BY-NC 2.5</p>
+    </div>
+    <aside class="notes">Оксфордский словарь назвал rage bait словом 2025 года: за год это выражение стали употреблять втрое чаще. Устроено это так: возмущённый человек комментирует и пересылает, а лента показывает пост ещё большему числу людей. Комикс xkcd про такой спор нарисован в 2008 году. Получается, шум мы производим и сами, когда ввязываемся в подобный спор или пересылаем без проверки.</aside>
+  </section>
+
+  <!-- 11. Slop -->
+  <section class="slide slide--inverse s-split">
+    <div class="duo">
+      <figure class="plain-fig"><img src="assets/img/twoheadcat.jpg" alt="Сгенерированный рисунок двухголового кота"><figcaption class="credit">ChatGPT</figcaption></figure>
+      <figure class="plain-fig"><img src="assets/img/lemur.jpg" alt="Сгенерированный лемур за компьютером"><figcaption class="credit">Bing Image Creator</figcaption></figure>
+    </div>
+    <div>
+      <p class="eyebrow mono ai">слово 2025 года · Merriam-Webster</p>
+      <h2>Slop — нейрослоп</h2>
+      <p class="lead">Контент низкого качества, который массово делают с помощью ИИ.</p>
+      <ol class="rules rules--sm">
+        <li>Делается за секунды, поэтому его очень много</li>
+        <li>Выкладывается ради просмотров</li>
+        <li>Автора, который отвечает за сказанное, нет</li>
+      </ol>
+      <p class="note"><b>Цифра.</b> Больше 20% роликов, которые YouTube предлагает новому пользователю, — нейрослоп (Kapwing, 2025).</p>
+    </div>
+    <aside class="notes">Определение Merriam-Webster: «цифровой контент низкого качества, который обычно производится в больших количествах с помощью искусственного интеллекта». Цифра про YouTube — из отчёта сервиса Kapwing за 2025 год: авторы завели новый аккаунт и посчитали, сколько предложенных роликов сделано нейросетью. Узнать нейрослоп можно по трём признакам. Он делается за секунды, поэтому его очень много. Его выкладывают ради просмотров и реакций. И за сказанное в нём никто не отвечает, потому что автора нет.</aside>
+  </section>
+
+  <!-- 12. Подделка -->
+  <section class="slide">
+    <p class="eyebrow mono ai">что изменил ИИ</p>
+    <h2>Правдоподобную подделку теперь делают одним запросом</h2>
+    <div class="trio">
+      <figure class="plain-fig"><img src="assets/img/pope.jpg" alt="Сгенерированное изображение папы римского в белом пуховике"><figcaption><b>2023.</b> Папа римский «в пуховике». Картинку приняли за фотографию миллионы людей.</figcaption></figure>
+      <figure class="plain-fig"><img src="assets/img/hollywood.jpg" alt="Сгенерированное изображение горящей надписи Hollywood"><figcaption><b>2025.</b> «Горящая» надпись Hollywood. Настоящая надпись не пострадала.</figcaption></figure>
+    </div>
+    <aside class="notes">Раньше на правдоподобную подделку уходили часы в фоторедакторе, теперь хватает запроса и нескольких секунд. Папу римского сгенерировали в Midjourney в марте 2023 года. В мае того же года снимок «взрыва у Пентагона» на несколько минут обвалил биржевые индексы США. Картинка с надписью Hollywood разошлась в январе 2025 года, во время пожаров в Лос-Анджелесе. С 2025 года так же по одному запросу делают и видео со звуком, например в Veo 3 и Sora 2.</aside>
+  </section>
+
+  <!-- 13. ИИ или фото -->
+  <section class="slide slide--inverse">
+    <p class="eyebrow mono ai">голосуем руками</p>
+    <h2>ИИ или фото?</h2>
+    <div class="guess-row">
+      <figure class="guess" data-answer="photo">
+        <img src="assets/img/shoebill.jpg" alt="Крупная серая птица с огромным клювом">
+        <div class="guess__ctl"><button class="btn" data-pick="ai">ИИ</button><button class="btn" data-pick="photo">Фото</button></div>
+        <figcaption class="guess__res" hidden><b>Фото.</b> Китоглав, птица из Африки.</figcaption>
+      </figure>
+      <figure class="guess" data-answer="ai">
+        <img src="assets/img/aiwoman.jpg" alt="Девушка с сумкой в проходе большого магазина">
+        <div class="guess__ctl"><button class="btn" data-pick="ai">ИИ</button><button class="btn" data-pick="photo">Фото</button></div>
+        <figcaption class="guess__res" hidden><b>ИИ.</b> Stable Diffusion. Прочитайте надписи на полках.</figcaption>
+      </figure>
+      <figure class="guess" data-answer="photo">
+        <img src="assets/img/socotra.jpg" alt="Дерево с кроной в форме зонта">
+        <div class="guess__ctl"><button class="btn" data-pick="ai">ИИ</button><button class="btn" data-pick="photo">Фото</button></div>
+        <figcaption class="guess__res" hidden><b>Фото.</b> Драконово дерево на острове Сокотра.</figcaption>
+      </figure>
+    </div>
+    <p class="note"><b>Вывод.</b> Необычная картинка может оказаться настоящей, а самая обычная — сгенерированной.</p>
+    <aside class="notes">Сначала группа голосует руками, потом нажимаем её ответ. Нейросеть чаще всего ошибается в надписях, руках, зубах и лицах на заднем плане. Но модели улучшаются, и на детали полагаться всё труднее. Поэтому сначала выясняем, кто выложил картинку первым и есть ли она у других источников.</aside>
+  </section>
+
+  <!-- 14. Галлюцинации -->
+  <section class="slide s-split s-split--wide">
+    <div>
+      <p class="eyebrow mono ai">ошибки нейросетей</p>
+      <h2>В 2024 году ИИ-поиск посоветовал добавить в пиццу <span class="ai">клей</span></h2>
+      <p class="lead">Якобы так не сползёт сыр. Совет модель взяла из шутки на форуме.</p>
+      <p class="note"><b>Термин.</b> Ответ, который звучит уверенно, но расходится с фактами, называют галлюцинацией.</p>
+    </div>
+    <div class="loop" aria-label="Схема: шум в интернете попадает в обучение ИИ и возвращается в интернет">
+      <div class="loop__node">Шум в&nbsp;интернете</div>
+      <div class="loop__arrow">↓ на нём учится</div>
+      <div class="loop__node loop__node--ai">Нейросеть</div>
+      <div class="loop__arrow">↓ пишет новые тексты</div>
+      <div class="loop__node">Ещё больше шума</div>
+      <div class="loop__back mono">↺ затем всё повторяется</div>
+    </div>
+    <aside class="notes">Языковая модель со справочником не сверяется. Она продолжает текст так, как это выглядит наиболее правдоподобно, и иногда продолжение расходится с фактами. Пример посвежее: в октябре 2025 года компания Deloitte вернула правительству Австралии часть денег за отчёт, в котором нашлись ссылки на несуществующие исследования и выдуманная цитата из решения суда. Отчёт частично писали с помощью нейросети. Схема справа показывает, почему ошибок становится больше: модели учатся на текстах из интернета, а туда попадают и их собственные тексты.</aside>
+  </section>
+
+  <!-- 15. Боты -->
+  <section class="slide slide--inverse s-center">
+    <p class="eyebrow mono ai">боты</p>
+    <p class="big-num big-num--ai">53%</p>
+    <h2>интернет-трафика создают боты</h2>
+    <p class="credit">Imperva Bad Bot Report, 2026</p>
+    <aside class="notes">По отчёту 2026 года на ботов приходится больше 53% трафика. Годом раньше был 51%: тогда автоматический трафик обогнал человеческий впервые за десять лет. Боты бывают полезные, например поисковые роботы, которые обходят сайты. Другие накручивают просмотры и пишут комментарии. Есть «теория мёртвого интернета», по которой живых людей в сети почти не осталось. Это преувеличение, но встретить бота в комментариях сейчас легко.</aside>
+  </section>
+
+  <!-- 16. Стресс -->
+  <section class="slide s-split s-split--wide">
+    <div>
+      <p class="eyebrow mono">стресс</p>
+      <p class="big-num big-num--md noise">37%</p>
+      <h2>россиян регулярно испытывают стресс</h2>
+      <p class="lead">В 2022 году было 26%. Молодые говорят о стрессе в четыре раза чаще старших.</p>
+      <p class="note"><b>Причины.</b> Их много. Постоянный поток сообщений и плохих новостей — одна из них.</p>
+      <p class="credit">ВЦИОМ, опрос в октябре 2025 года</p>
+    </div>
+    <figure class="meme meme--sq">
+      <img src="assets/img/thisisfine.jpg" alt="Собака в шляпе сидит за столом в горящей комнате">
+      <figcaption class="meme__top">23 вкладки, 5 чатов, завтра зачёт</figcaption>
+      <figcaption class="meme__bottom">Всё нормально</figcaption>
+    </figure>
+    <aside class="notes">Опрос ВЦИОМ, октябрь 2025 года: 37% испытывают стресс несколько раз в месяц и чаще. Сами люди чаще всего называют причинами стресса семейные проблемы, отношения и деньги. Информационный шум добавляется к ним двумя путями. Первый — думскроллинг (от doom, «гибель», и scrolling, «прокрутка»): человек листает плохие новости и не может остановиться. Второй — rage bait, который держит в раздражении. По данным ВОЗ, у 11% подростков в Европе и Центральной Азии соцсети уже мешают сну и учёбе, а в 2018 году таких было 7%. Спросите группу, кто замечал, что после ленты настроение хуже, чем до неё.</aside>
+  </section>
+
+  <!-- 17. Внимание -->
+  <section class="slide">
+    <p class="eyebrow mono">внимание · Каролинский институт, 2025</p>
+    <h2>Чем больше времени в соцсетях, тем труднее сосредоточиться</h2>
+    <p class="lead">8324 ребёнка наблюдали четыре года. У тех, кто много сидел в соцсетях, нарастали симптомы невнимательности, как при СДВГ.</p>
+    <table class="cmp cmp--rows">
+      <tbody>
+        <tr><th>Соцсети</th><td>симптомы невнимательности нарастали</td><td><span class="mark mark--noise">связь есть</span></td></tr>
+        <tr><th>Видеоигры</th><td>изменений не увидели</td><td><span class="mark">связи нет</span></td></tr>
+        <tr><th>Телевизор</th><td>изменений не увидели</td><td><span class="mark">связи нет</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note"><b>Оговорка.</b> Диагноз СДВГ ставит врач, и одной лентой он не объясняется. Речь о симптомах: человеку труднее удерживать внимание.</p>
+    <aside class="notes">Исследование Каролинского института и Орегонского университета здоровья и науки, опубликовано в журнале Pediatrics Open Science в декабре 2025 года. Детей наблюдали с 9–10 до 14 лет. Авторы объясняют результат так: в соцсетях постоянно приходят сообщения и уведомления, и отвлекает даже мысль о том, не пришло ли что-то новое. Гиперактивность при этом не росла, а для одного человека эффект небольшой. Но в масштабе страны, по словам авторов, он может объяснять часть роста числа диагнозов СДВГ. Телефон сам по себе СДВГ не вызывает, но привычка постоянно проверять ленту мешает сосредоточенной работе.</aside>
+  </section>
+
+  <!-- 18. Фильтр -->
+  <section class="slide slide--inverse">
+    <p class="eyebrow mono signal">проверка</p>
+    <h2>Четыре проверки перед тем, как переслать</h2>
+    <ol class="steps">
+      <li><b>Стоп</b><span>Сообщение злит или восхищает? Сначала проверьте его.</span></li>
+      <li><b>Источник</b><span>Кто это говорит и откуда он это знает?</span></li>
+      <li><b>Другие</b><span>Пишут ли об этом другие источники?</span></li>
+      <li><b>Оригинал</b><span>Откуда взяты фото, цитата, цифра?</span></li>
+    </ol>
+    <aside class="notes">Это метод SIFT исследователя Майка Колфилда: Stop, Investigate the source, Find better coverage, Trace to the original. На практике хватает минуты: поиск по картинке в Яндексе, дата публикации, сайт первоисточника. Под «другими» имеются в виду те, кто отвечает за свои слова: редакции, ведомства, учёные.</aside>
+  </section>
+
+  <!-- 19. ИИ как фильтр -->
+  <section class="slide">
+    <p class="eyebrow mono ai">ии как инструмент</p>
+    <h2>Нейросеть помогает разобрать большой объём информации</h2>
+    <dl class="deflist">
+      <dt>Сжать</dt><dd>часовое видео в десять строк</dd>
+      <dt>Объяснить</dt><dd>трудную тему на примерах</dd>
+      <dt>Сравнить</dt><dd>два источника: в чём они расходятся</dd>
+    </dl>
+    <p class="sub-head mono">три правила</p>
+    <ol class="rules">
+      <li>Просите ссылки на источники и открывайте их.</li>
+      <li>Чем дороже ошибка, тем тщательнее проверяйте ответ.</li>
+      <li>За сданную работу отвечаете вы, даже если текст написала нейросеть.</li>
+    </ol>
+    <aside class="notes">Нейросети создают шум, но ими же удобно разбирать большой объём информации: пересказать, объяснить, сравнить источники. Условие одно: ответ должен быть проверяемым. Для будущих разработчиков то же относится к коду: написанное моделью читают и запускают сами.</aside>
+  </section>
+
+  <!-- 20. Гигиена -->
+  <section class="slide s-split">
+    <div>
+      <p class="eyebrow mono signal">можно сделать сегодня</p>
+      <h2>Как уменьшить шум</h2>
+      <ul class="list list--check list--big">
+        <li>Оставить уведомления только от людей</li>
+        <li>На парах включать «Не беспокоить»</li>
+        <li>Отписаться от каналов, которые месяц не открывали</li>
+        <li>Листать ленту по таймеру</li>
+      </ul>
+    </div>
+    <div class="duo duo--memes">
+      <figure class="meme">
+        <img src="assets/img/zhdun.jpg" alt="Скульптура «Ждун»">
+        <figcaption class="meme__top">Жду, когда закончится лента</figcaption>
+        <figcaption class="meme__bottom">Она не закончится</figcaption>
+      </figure>
+      <figure class="meme">
+        <img src="assets/img/grumpy.jpg" alt="Сердитый кот">
+        <figcaption class="meme__top">«Включите уведомления»</figcaption>
+        <figcaption class="meme__bottom">Нет</figcaption>
+      </figure>
+    </div>
+    <aside class="notes">Предложите выбрать одно действие и сделать его прямо сейчас, за минуту: отключить уведомления одному приложению или отписаться от одного канала. Сделанное на паре запоминается лучше, чем совет.</aside>
+  </section>
+
+  <!-- 21. Итог -->
+  <section class="slide slide--inverse s-split">
+    <div>
+      <p class="eyebrow mono">итог</p>
+      <ol class="rules rules--big">
+        <li>Шум — сообщение не по задаче или без источника.</li>
+        <li>От постоянного шума растут стресс и рассеянность.</li>
+        <li>С нейросетями шума стало больше, но они же помогают его разбирать.</li>
+        <li>Перед пересылкой: стоп, источник, другие, оригинал.</li>
+      </ol>
+      <div class="row">
+        <a class="btn btn--primary" href="quiz.html">Своя игра: команды</a>
+        <a class="btn" href="feed.html">Лента: каждый сам</a>
+      </div>
+    </div>
+    <figure class="meme meme--sq">
+      <img src="assets/img/doge.jpg" alt="Мем Doge: сиба-ину в снегу с разноцветными надписями">
+    </figure>
+    <aside class="notes">Дальше игра. В «Своей игре» группа делится на команды и играет с одного экрана: 20 вопросов на баллы и финал со ставками. В «Ленту» каждый играет за своим компьютером около пяти минут, в конце сравниваем счёт.</aside>
+  </section>
+
+  <!-- 22. Источники -->
+  <section class="slide">
+    <p class="eyebrow mono">источники</p>
+    <ul class="sources">
+      <li>Mediascope. Медиапотребление подростков, ПМЭФ, июнь 2026</li>
+      <li>ВЦИОМ. Опрос о стрессе, октябрь 2025</li>
+      <li>Karolinska Institutet. Social media use and inattention symptoms. Pediatrics Open Science, декабрь 2025</li>
+      <li>Imperva (Thales). Bad Bot Report, 2026</li>
+      <li>Oxford University Press. Word of the Year 2025: rage bait; 2024: brain rot</li>
+      <li>Merriam-Webster. Word of the Year 2025: slop</li>
+      <li>Kapwing. AI Slop Report, 2025</li>
+      <li>ВОЗ, Европейское бюро. Teens, screens and mental health, 2024</li>
+      <li>Gloria Mark. Attention Span, 2023</li>
+      <li>Common Sense Media. Constant Companion, 2023</li>
+      <li>Herbert Simon. Designing Organizations for an Information-Rich World, 1971</li>
+      <li>Mike Caulfield. SIFT (The Four Moves), 2019</li>
+      <li>Картинки: Wikimedia Commons (общественное достояние и лицензии CC), xkcd (CC BY-NC 2.5). Авторы и ссылки — в README.md</li>
+    </ul>
+  </section>
+
+</main>
+
+<aside class="notes-panel" id="notesPanel" hidden></aside>
+
+<nav class="deck-nav" aria-label="Навигация по слайдам">
+  <a class="icon-btn" href="index.html" title="На главную" aria-label="На главную">⌂</a>
+  <button class="icon-btn" id="prev" aria-label="Назад">←</button>
+  <span class="mono deck-nav__count" id="count">1 / 22</span>
+  <button class="icon-btn" id="next" aria-label="Дальше">→</button>
+  <button class="icon-btn" id="notesBtn" title="Заметки преподавателя (N)" aria-label="Заметки преподавателя">N</button>
+  <button class="icon-btn" data-theme-toggle title="Светлая или тёмная тема" aria-label="Сменить тему">◐</button>
+  <button class="icon-btn" id="fs" title="На весь экран (F)" aria-label="На весь экран">⛶</button>
+</nav>
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+<script src="assets/js/slides.js"></script>
+</body>
+</html>

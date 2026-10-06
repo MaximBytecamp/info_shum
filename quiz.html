@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Своя игра — информационный шум</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/quiz.css">
+  <script src="assets/js/theme.js"></script>
+</head>
+<body>
+
+<!-- Настройка команд -->
+<section class="screen setup" id="setup">
+  <p class="eyebrow mono">своя игра · командный квиз с одного экрана</p>
+  <h1>Шум или <span class="signal">сигнал</span></h1>
+  <p class="setup__lead">20 вопросов на баллы и финал со ставками. Команды выбирают вопрос по очереди и отвечают с места.</p>
+
+  <div class="setup__grid">
+    <div class="setup__block">
+      <h2>Сколько команд</h2>
+      <div class="seg" id="teamCount" role="group" aria-label="Количество команд">
+        <button type="button" data-n="2">2</button>
+        <button type="button" data-n="3">3</button>
+        <button type="button" data-n="4">4</button>
+        <button type="button" data-n="5">5</button>
+      </div>
+      <p class="muted setup__hint" id="teamHint"></p>
+      <label class="check"><input type="checkbox" id="penalty"> Штраф за неверный ответ: минус стоимость вопроса</label>
+    </div>
+    <div class="setup__block">
+      <h2>Названия</h2>
+      <div class="names" id="names"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button class="btn btn--primary" id="startBtn">Начать игру</button>
+    <button class="btn" id="resumeBtn" hidden>Продолжить прошлую</button>
+    <a class="btn btn--ghost" href="index.html">На главную</a>
+  </div>
+</section>
+
+<!-- Табло -->
+<section class="screen board-screen" id="boardScreen" hidden>
+  <header class="scores" id="scores"></header>
+  <div class="board" id="board"></div>
+  <footer class="board-foot">
+    <span class="mono muted" id="turnLine"></span>
+    <span class="board-foot__btns">
+      <button class="btn" id="finalBtn">Финал со ставками</button>
+      <button class="btn btn--ghost" id="resultsBtn">Итоги</button>
+      <button class="btn btn--ghost" id="newBtn">Новая игра</button>
+      <button class="icon-btn" data-theme-toggle title="Светлая или тёмная тема" aria-label="Сменить тему">◐</button>
+      <button class="icon-btn" id="fs" title="На весь экран" aria-label="На весь экран">⛶</button>
+      <a class="icon-btn" href="index.html" title="На главную" aria-label="На главную">⌂</a>
+    </span>
+  </footer>
+</section>
+
+<!-- Вопрос -->
+<section class="overlay" id="qOverlay" hidden>
+  <header class="q-head">
+    <span class="tag" id="qCat"></span>
+    <span class="q-value mono" id="qValue"></span>
+    <span class="timer" id="timer"><i id="timerBar"></i><b class="mono" id="timerNum">30</b></span>
+    <button class="icon-btn" id="qClose" title="Закрыть без ответа (Esc)" aria-label="Закрыть">✕</button>
+  </header>
+  <div class="q-body" id="qBody">
+    <figure class="q-img" id="qImgWrap" hidden><img id="qImg" alt=""></figure>
+    <div class="q-text">
+      <p class="q-question" id="qText"></p>
+      <ol class="q-options" id="qOptions" hidden></ol>
+      <div class="q-answer" id="qAnswer" hidden>
+        <p class="q-answer__main" id="qAnswerMain"></p>
+        <p class="q-answer__note" id="qAnswerNote"></p>
+      </div>
+    </div>
+  </div>
+  <footer class="q-foot">
+    <button class="btn btn--primary" id="revealBtn">Показать ответ <kbd>пробел</kbd></button>
+    <div class="award" id="award" hidden>
+      <span class="mono muted">кто ответил верно?</span>
+      <div class="award__teams" id="awardTeams"></div>
+      <button class="btn btn--ghost" id="nobodyBtn">Никто</button>
+    </div>
+  </footer>
+</section>
+
+<!-- Финал -->
+<section class="overlay" id="finalOverlay" hidden>
+  <header class="q-head">
+    <span class="tag">финал</span>
+    <span class="q-value mono" id="finalTheme"></span>
+    <span class="timer" id="fTimer" hidden><i id="fTimerBar"></i><b class="mono" id="fTimerNum">45</b></span>
+    <button class="icon-btn" id="fClose" title="Закрыть (Esc)" aria-label="Закрыть">✕</button>
+  </header>
+  <div class="final-body">
+    <p class="final-step mono" id="finalStep"></p>
+    <p class="q-question" id="finalText"></p>
+    <div class="q-answer" id="finalAnswer" hidden>
+      <p class="q-answer__main" id="finalAnswerMain"></p>
+      <p class="q-answer__note" id="finalAnswerNote"></p>
+    </div>
+    <div class="bets" id="bets"></div>
+  </div>
+  <footer class="q-foot">
+    <button class="btn btn--primary" id="finalNext"></button>
+  </footer>
+</section>
+
+<!-- Итоги -->
+<section class="overlay results" id="results" hidden>
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+  <p class="eyebrow mono">итоги</p>
+  <h1 id="winnerLine"></h1>
+  <ol class="podium" id="podium"></ol>
+  <div class="row">
+    <button class="btn" id="backBtn">Вернуться к табло</button>
+    <button class="btn btn--primary" id="againBtn">Новая игра</button>
+    <a class="btn btn--ghost" href="feed.html">Одиночная игра «Лента»</a>
+  </div>
+</section>
+
+<script src="assets/js/quiz-data.js"></script>
+<script src="assets/js/quiz.js"></script>
+</body>
+</html>

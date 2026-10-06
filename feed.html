@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Лента — игра про информационный шум</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/feed.css">
+  <script src="assets/js/theme.js"></script>
+</head>
+<body>
+<div class="top">
+  <a class="icon-btn" href="index.html" title="На главную" aria-label="На главную">⌂</a>
+  <button class="icon-btn" data-theme-toggle title="Светлая или тёмная тема" aria-label="Сменить тему">◐</button>
+</div>
+
+<main class="stage">
+
+  <!-- Старт -->
+  <section class="view" id="start">
+    <p class="eyebrow mono">одиночная игра · 5 минут</p>
+    <h1>Лента</h1>
+    <p class="lead">У вас есть задача, и в ленту приходят сообщения. Про каждое решите, <b class="signal">сигнал</b> это или <b class="noise">шум</b>.</p>
+    <ul class="how">
+      <li><kbd>←</kbd> шум</li>
+      <li><kbd>→</kbd> сигнал</li>
+      <li>На время играть не нужно: скорость даёт только бонус</li>
+      <li>После каждой карточки показано объяснение</li>
+    </ul>
+    <p class="rule">Сигнал относится к задаче, <b>и</b> его можно проверить.</p>
+    <button class="btn btn--primary" id="startBtn">Начать</button>
+    <p class="mono muted" id="bestLine"></p>
+  </section>
+
+  <!-- Задача уровня -->
+  <section class="view" id="intro" hidden>
+    <p class="eyebrow mono" id="introLevel"></p>
+    <p class="mono muted">ваша задача</p>
+    <h2 id="introGoal"></h2>
+    <p class="muted" id="introHint"></p>
+    <button class="btn btn--primary" id="goBtn">Поехали <kbd>Enter</kbd></button>
+  </section>
+
+  <!-- Игра -->
+  <section class="view play" id="play" hidden>
+    <header class="hud">
+      <span class="hud__item"><b id="score">0</b><i>очки</i></span>
+      <span class="hud__item"><b id="streak">×1,0</b><i>серия</i></span>
+      <span class="hud__item"><b id="progress">1/27</b><i>карточка</i></span>
+    </header>
+    <p class="goal"><span class="mono">задача</span><span id="goal"></span></p>
+    <div class="timebar" id="timebar"><i id="timeFill"></i></div>
+
+    <div class="deck-area">
+      <article class="card" id="card">
+        <header class="card__head">
+          <span class="card__ava" id="cardAva"></span>
+          <span class="card__who"><b id="cardFrom"></b><span id="cardMeta"></span></span>
+          <span class="tag" id="cardKind"></span>
+        </header>
+        <div class="card__thumb" id="cardThumb" hidden></div>
+        <p class="card__text" id="cardText"></p>
+        <div class="verdict" id="verdict" hidden>
+          <p class="verdict__mark" id="verdictMark"></p>
+          <p class="verdict__type"><span class="tag" id="verdictType"></span></p>
+          <p class="verdict__why" id="verdictWhy"></p>
+          <button class="btn" id="nextBtn">Дальше <kbd>Enter</kbd></button>
+        </div>
+      </article>
+    </div>
+
+    <div class="choice" id="choice">
+      <button class="btn btn--noise" id="noiseBtn"><kbd>←</kbd> Шум</button>
+      <button class="btn btn--signal" id="signalBtn">Сигнал <kbd>→</kbd></button>
+    </div>
+  </section>
+
+  <!-- Итог -->
+  <section class="view" id="end" hidden>
+    <p class="eyebrow mono">результат</p>
+    <p class="final-score" id="finalScore">0</p>
+    <h2 id="rank"></h2>
+    <ul class="stats">
+      <li><b id="statRight"></b><span>верных решений</span></li>
+      <li><b id="statAcc"></b><span>точность</span></li>
+      <li><b id="statStreak"></b><span>лучшая серия</span></li>
+    </ul>
+    <div class="review" id="review" hidden>
+      <p class="mono muted">разбор ошибок</p>
+      <ul id="reviewList"></ul>
+    </div>
+    <div class="review">
+      <p class="mono muted">правила из игры</p>
+      <ul>
+        <li class="is-rule">Вопрос по теме и репост новых сведений не дают.</li>
+        <li class="is-rule">Если сообщение торопит («срочно», «пока не удалили»), сначала проверьте его.</li>
+        <li class="is-rule">Цифре нужна ссылка на источник, в том числе когда её назвала нейросеть.</li>
+        <li class="is-rule">Пересказ от нейросети годится, если к нему приложена ссылка на оригинал.</li>
+      </ul>
+    </div>
+    <p class="muted">Назовите счёт преподавателю, сравним результаты группы.</p>
+    <div class="row">
+      <button class="btn btn--primary" id="againBtn">Ещё раз</button>
+      <a class="btn" href="index.html">На главную</a>
+    </div>
+  </section>
+
+</main>
+
+<script src="assets/js/feed-data.js"></script>
+<script src="assets/js/feed.js"></script>
+</body>
+</html>
