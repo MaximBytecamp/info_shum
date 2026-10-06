@@ -201,7 +201,7 @@ kbd { font-size: 0.7em; opacity: 0.75; }
 }
 .podium li.is-winner { box-shadow: 6px 6px 0 var(--mark); font-size: 1.9em; }
 .podium .place { font-family: var(--mono); color: var(--muted); }
-.podium .pts { font-variant-numeric: tabular-nums; color: var(--signal-ink); }
+.podium .pts { font-variant-numeric: tabular-nums; color: var(--accent); }
 .results .row { justify-content: center; position: relative; }
 
 @media (max-width: 800px) {
